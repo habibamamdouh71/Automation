@@ -1,0 +1,88 @@
+{
+  "name": "Daily Weather Update",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 7
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "c3000000-0000-4000-8000-000000000001",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "url": "http://api.weatherapi.com/v1/current.json?key=YOUR_WEATHERAPI_KEY&q=Sohag&aqi=yes",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        260,
+        0
+      ],
+      "id": "c3000000-0000-4000-8000-000000000002",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "chatId": "1468310978",
+        "text": "=🌤 Weather Report for {{$json[\"location\"][\"name\"]}}, {{$json[\"location\"][\"country\"]}} 🌤\n\n🌡 Temperature: {{ $json.current.temp_c }} °C\n🤔 Feels like: {{ $json.current.feelslike_c }} °C\n💨 Wind Chill: {{ $json.current.windchill_c }} °C\n🔥 Heat Index: {{ $json.current.heatindex_c }} °C\n\n🌫 Visibility: {{ $json.current.vis_km }} km\n☀️ UV Index: {{ $json.current.uv }}\n\n🌪 Wind Gust: {{ $json.current.gust_kph }} km/h\n\n🌍 Air Quality:\n- CO: {{ $json.current.air_quality.co }}\n- NO2: {{ $json.current.air_quality.no2 }}\n- O3: {{ $json.current.air_quality.o3 }}\n- SO2: {{ $json.current.air_quality.so2 }}\n- PM2.5: {{ $json.current.air_quality.pm2_5 }}\n- PM10: {{ $json.current.air_quality.pm10 }}\n- US EPA Index: {{ $json.current.air_quality['us-epa-index'] }}\n- GB DEFRA Index: {{ $json.current.air_quality['gb-defra-index'] }}\n\n📡 Radiation:\n- Shortwave: {{ $json.current.short_rad }}\n- Diffuse:  {{ $json.current.diff_rad }}\n- DNI: {{ $json.current.dni }}\n- GTI: {{ $json.current.gti }}\n\n📅 Update Time: {{ $('Schedule Trigger').item.json['Readable date'] }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        520,
+        0
+      ],
+      "id": "c3000000-0000-4000-8000-000000000003",
+      "name": "Send a text message",
+      "credentials": {
+        "telegramApi": {
+          "name": "Telegram account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Africa/Cairo"
+  }
+}
