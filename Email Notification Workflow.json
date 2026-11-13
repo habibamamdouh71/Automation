@@ -1,0 +1,142 @@
+{
+  "name": "Email Notification Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "form-submission",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        176,
+        -16
+      ],
+      "id": "f6fe5991-6976-479d-ba17-0a045c8b6132",
+      "name": "Webhook",
+      "webhookId": "form-submission"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f0",
+              "name": "body.firstName",
+              "value": "={{ $json.body.firstName }}",
+              "type": "string"
+            },
+            {
+              "id": "f1",
+              "name": "body.lastName",
+              "value": "={{ $json.body.lastName }}",
+              "type": "string"
+            },
+            {
+              "id": "f2",
+              "name": "body.phone",
+              "value": "={{ $json.body.phone }}",
+              "type": "string"
+            },
+            {
+              "id": "f3",
+              "name": "body.gender",
+              "value": "={{ $json.body.gender }}",
+              "type": "string"
+            },
+            {
+              "id": "f4",
+              "name": "body.email",
+              "value": "={{ $json.body.email }}",
+              "type": "string"
+            },
+            {
+              "id": "f5",
+              "name": "Governorate",
+              "value": "={{ $json.body.state }}",
+              "type": "string"
+            },
+            {
+              "id": "f6",
+              "name": "Date of Birth",
+              "value": "={{ $json.body.dob }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        448,
+        -16
+      ],
+      "id": "0b7a1c6f-5f58-4b4e-9d68-3cd9c45cbd28",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "sendTo": "habibamamdouh71@gmail.com",
+        "subject": "New form submission",
+        "message": "=<h2>New Form Submission</h2>\n<p><strong>First Name:</strong> {{ $json.body.firstName }}</p>\n<p><strong>Last Name:</strong> {{ $json.body.lastName }}</p>\n<p><strong>Mobile:</strong> {{ $json.body.phone }}</p>\n<p><strong>Gender:</strong> {{ $json.body.gender }}</p>\n<p><strong>Email:</strong> {{ $json.body.email }}</p>\n<p><strong>Governorate:</strong> {{ $json.Governorate }}</p>\n<p><strong>Date of Birth:</strong> {{ $json['Date of Birth'] }}</p>",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        704,
+        -16
+      ],
+      "id": "f8fd7b93-f975-43ba-bd78-40b4221c183a",
+      "name": "Send a message",
+      "webhookId": "284d6a1e-3798-4405-9e95-7b69e7ba7c53",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "e0Rz0SId4oyT2tRh",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "335e862b-746d-4a5f-b7eb-f2544d117077",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "dc87637677f1fac6f364ea698df68a68ae84226b7db7af02f2859027f9d786b5"
+  },
+  "id": "FOmvKaJrOSxh8VXt",
+  "tags": []
+}
